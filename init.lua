@@ -1,89 +1,4 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know the Neovim basics, you can skip this step.)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua.
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite Neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not exactly sure of what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or Neovim features used in Kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help you understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your Neovim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
-
+-- [[ Global options ]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -91,18 +6,19 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+vim.opt.termguicolors = true
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -228,6 +144,14 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  {
+    'magal1337/dataform.nvim',
+    dependencies = {
+      'rcarriga/nvim-notify',
+      'nvim-telescope/telescope.nvim',
+    },
+  },
+
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
@@ -860,6 +784,7 @@ require('lazy').setup({
     'echasnovski/mini.nvim',
     config = function()
       -- Better Around/Inside textobjects
+This is a test:
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
@@ -930,10 +855,10 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -967,5 +892,129 @@ require('lazy').setup({
   },
 })
 
+local query_estimate = function()
+  -- Will perform a dry run of the query in the buffer then parse and notify the
+  -- results to the user
+  -- Create a temporary file to save the buffer too
+  local temp_file = '/tmp/bq_query_' .. os.time() .. '.sql'
+  -- Get current buffer content and write to temp file
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local file = io.open(temp_file, 'w')
+  file:write(table.concat(lines, '\n'))
+  file:close()
+
+  local cmd = string.format('bq query --use_legacy_sql=false --dry_run "$(cat %s)"', temp_file)
+  -- Set up job options (use jobs to prevent command from freezing UI)
+  local job_opts = {
+    on_stdout = function(_, data)
+      if not data then
+        return
+      end
+
+      local output = table.concat(data, '\n')
+      -- Only proceed if output is not empty
+      if output and output ~= '' then
+        vim.schedule(function()
+          -- Check if it's an error message first
+          if string.find(output, 'Error in query string') then
+            vim.notify(output, 'error')
+          else
+            -- Parse the bytes figure from the output
+            local bytes = string.match(output, '%s(%d+)%s')
+            if bytes == nil then
+              vim.notify('Failed to parse bytes: ' .. output, vim.log.levels.ERROR)
+              return
+            end
+            local query_cost = bytes / 1024 / 1024 / 1024
+            -- Regular output notification
+            vim.notify(string.format('Query cost: %.2f GB', query_cost))
+          end
+        end)
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        -- Handle any errors
+        local error_msg = table.concat(data, '\n')
+        if error_msg ~= '' then
+          vim.schedule(function()
+            vim.notify(error_msg, 'error')
+          end)
+        end
+      end
+    end,
+    on_exit = function()
+      -- Clean up the temporary file
+      vim.schedule(function()
+        os.remove(temp_file)
+      end)
+    end,
+  }
+  -- Start the job
+  vim.fn.jobstart({ 'sh', '-c', cmd }, job_opts)
+end
+
+vim.api.nvim_create_user_command('QueryCost', query_estimate, {})
+local group = vim.api.nvim_create_augroup('SQLQueryEstimate', { clear = true })
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+  group = group,
+  pattern = '*.sql',
+  callback = function()
+    query_estimate()
+  end,
+  desc = 'Estimate query cost after saving SQL file',
+})
+
+local dataform_query_compile = function()
+  -- Get current buffer content
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local config_text = table.concat(lines, '\n')
+
+  -- Try to find name in config block
+  local config_name = config_text:match 'config%s*{.-name:%s*"([^"]+)".-}'
+
+  -- Get the current buffer's filename as fallback
+  local current_file = vim.fn.expand '%:t'
+  local file_name = current_file:gsub('%..*$', '')
+
+  -- Use config name if found, otherwise use filename
+  local table_name = config_name or file_name
+  local command = string.format('dataform compile --json 2>/dev/null | jq -r \'.tables | .[] | select(.target.name == "%s") | .query\'', table_name)
+  local content = vim.fn.system(command)
+  local bufnr = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, vim.split(content, '\n'))
+  vim.api.nvim_command 'vsplit'
+  vim.api.nvim_win_set_buf(0, bufnr)
+  vim.bo[bufnr].filetype = 'sql'
+end
+vim.api.nvim_create_user_command('CompileQuery', dataform_query_compile, {})
+
+-- Function to run BigQuery on current buffer
+function RunBigQueryBuffer()
+  -- Generate unique temp file name
+  local temp_file = '/tmp/bq_query_' .. os.time() .. '.sql'
+
+  -- Get current buffer content and write to temp file
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local file = io.open(temp_file, 'w')
+  file:write(table.concat(lines, '\n'))
+  file:close()
+
+  local cmd = string.format('bq query --use_legacy_sql=false "$(cat %s)"', temp_file)
+  local content = vim.fn.system(cmd)
+  local bufnr = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, vim.split(content, '\n'))
+  vim.api.nvim_command 'split'
+  local win = vim.api.nvim_get_current_win()
+  vim.wo[win].wrap = false
+  vim.api.nvim_win_set_buf(win, bufnr)
+
+  -- Delete the temp file
+  os.remove(temp_file)
+end
+
+-- Create user command
+vim.api.nvim_create_user_command('BQRun', RunBigQueryBuffer, {})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
