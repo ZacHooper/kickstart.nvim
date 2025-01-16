@@ -1039,5 +1039,9 @@ end
 
 -- Create user command
 vim.api.nvim_create_user_command('BQRun', RunBigQueryBuffer, {})
+
+-- Snippets
+require 'custom.snippets.sqlx'
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
