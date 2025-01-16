@@ -755,7 +755,6 @@ require('lazy').setup({
               luasnip.jump(-1)
             end
           end, { 'i', 's' }),
-
           ['<C-e>'] = cmp.mapping(function()
             if luasnip.choice_active() then
               luasnip.change_choice(1)
@@ -779,6 +778,7 @@ require('lazy').setup({
     end,
   },
 
+  -- Colourschems
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -804,7 +804,6 @@ require('lazy').setup({
     'echasnovski/mini.nvim',
     config = function()
       -- Better Around/Inside textobjects
-This is a test:
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
@@ -882,6 +881,7 @@ This is a test:
 
   -- MY custom plugins
   require 'custom.plugins.markdown_preview',
+  -- require 'custom.plugins.bigquery'
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
