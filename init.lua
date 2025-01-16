@@ -15,6 +15,7 @@ vim.g.have_nerd_font = true
 
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
+
 vim.opt.termguicolors = true
 -- Make line numbers default
 vim.opt.number = true
@@ -554,6 +555,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        sqlls = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -584,6 +586,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'sqlfluff',
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -637,10 +641,17 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'ruff' },
+        sql = { 'sql_formatter' },
+        sqlx = { 'sql_formatter' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      },
+      formatters = {
+        sql_formatter = {
+          prepend_args = { '--language', 'bigquery', '--config', '{"keywordCase": "upper", "dataTypeCase": "upper"}' },
+        },
       },
     },
   },
@@ -680,6 +691,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'ray-x/cmp-sql',
     },
     config = function()
       -- See `:help cmp`
@@ -744,6 +756,11 @@ require('lazy').setup({
             end
           end, { 'i', 's' }),
 
+          ['<C-e>'] = cmp.mapping(function()
+            if luasnip.choice_active() then
+              luasnip.change_choice(1)
+            end
+          end, { 'i', 's' }),
           -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
@@ -756,6 +773,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'sql' },
         },
       }
     end,
