@@ -588,6 +588,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'sqlfluff',
         'ruff',
+        'markdownlint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
