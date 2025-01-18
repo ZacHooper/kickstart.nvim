@@ -650,7 +650,7 @@ require('lazy').setup({
       },
       formatters = {
         sql_formatter = {
-          prepend_args = { '--language', 'bigquery', '--config', '{"keywordCase": "upper", "dataTypeCase": "upper"}' },
+          prepend_args = { '--language', 'bigquery', '--config', '{"keywordCase": "upper", "dataTypeCase": "upper", "tabWidth": 4}' },
         },
       },
     },
