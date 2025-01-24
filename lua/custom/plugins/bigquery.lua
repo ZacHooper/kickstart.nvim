@@ -123,21 +123,44 @@ end
 vim.api.nvim_create_user_command('BQRun', RunBigQueryBuffer, {})
 
 local specs = {
-  {
-    name = 'BigQuery',
-    description = 'Run BigQuery on current buffer',
-    command = 'BQRun',
-  },
-  {
-    name = 'QueryCost',
-    description = 'Estimate query cost after saving SQL file',
-    command = 'QueryCost',
-  },
-  {
-    name = 'CompileQuery',
-    description = 'Compile Dataform query',
-    command = 'CompileQuery',
-  },
+  dir = '~/.config/nvim/lua/custom/plugins',
+  name = 'BigQuery',
+  opts = {},
+  config = function()
+    vim.api.nvim_set_keymap('n', '<leader>q', ':BQRun<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>c', ':CompileQuery<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>e', ':QueryCost<CR>', { noremap = true, silent = true })
+
+    vim.api.nvim_create_augroup('SQLQueryEstimate', { clear = true })
+    vim.api.nvim_create_autocmd('BufWritePost', {
+      group = 'SQLQueryEstimate',
+      pattern = '*.sql',
+      callback = function()
+        query_estimate()
+      end,
+      desc = 'Estimate query cost after saving SQL file',
+    })
+
+    vim.api.nvim_create_augroup('DataformQueryCompile', { clear = true })
+    vim.api.nvim_create_autocmd('BufWritePost', {
+      group = 'DataformQueryCompile',
+      pattern = '*.sql',
+      callback = function()
+        dataform_query_compile()
+      end,
+      desc = 'Compile Dataform query',
+    })
+
+    vim.api.nvim_create_augroup('RunBigQueryBuffer', { clear = true })
+    vim.api.nvim_create_autocmd('BufWritePost', {
+      group = 'RunBigQueryBuffer',
+      pattern = '*.sql',
+      callback = function()
+        RunBigQueryBuffer()
+      end,
+      desc = 'Run BigQuery on current buffer',
+    })
+  end,
 }
 
 return specs
