@@ -1,4 +1,3 @@
-
 local query_estimate = function()
   -- Will perform a dry run of the query in the buffer then parse and notify the
   -- results to the user
@@ -121,5 +120,24 @@ function RunBigQueryBuffer()
   os.remove(temp_file)
 end
 
--- Create user command
-v
+vim.api.nvim_create_user_command('BQRun', RunBigQueryBuffer, {})
+
+local specs = {
+  {
+    name = 'BigQuery',
+    description = 'Run BigQuery on current buffer',
+    command = 'BQRun',
+  },
+  {
+    name = 'QueryCost',
+    description = 'Estimate query cost after saving SQL file',
+    command = 'QueryCost',
+  },
+  {
+    name = 'CompileQuery',
+    description = 'Compile Dataform query',
+    command = 'CompileQuery',
+  },
+}
+
+return specs
