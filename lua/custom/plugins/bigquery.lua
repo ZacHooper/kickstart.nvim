@@ -127,9 +127,9 @@ local specs = {
   name = 'BigQuery',
   opts = {},
   config = function()
-    vim.api.nvim_set_keymap('n', '<leader>q', ':BQRun<CR>', { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>c', ':CompileQuery<CR>', { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>e', ':QueryCost<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>qq', ':BQRun<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>qc', ':CompileQuery<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>qe', ':QueryCost<CR>', { noremap = true, silent = true })
 
     vim.api.nvim_create_augroup('SQLQueryEstimate', { clear = true })
     vim.api.nvim_create_autocmd('BufWritePost', {
