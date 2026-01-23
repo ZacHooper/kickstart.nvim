@@ -90,8 +90,8 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   require 'custom.plugins.dataform',
-  require 'custom.plugins.image',
-  require 'custom.plugins.molten',
+  -- require 'custom.plugins.image',
+  -- require 'custom.plugins.molten',
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { -- A`:help gitsigns` adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -444,7 +444,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- `:help lspconfig-all`
-        sqlls = { filetypes = { 'sql', 'sqlx' } },
+        -- sqlls removed - doesn't understand dbt/Jinja templating
         basedpyright = {
           filetypes = { 'python' },
           settings = {
@@ -480,7 +480,6 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'sqlls',
         'sqlfluff',
         'ruff',
         'basedpyright',
@@ -499,6 +498,27 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+
+      -- dbt-language-server (not managed by Mason, installed separately)
+      -- Understands dbt/Jinja templating in SQL files
+      local lspconfig = require 'lspconfig'
+      local configs = require 'lspconfig.configs'
+
+      if not configs.dbt_ls then
+        configs.dbt_ls = {
+          default_config = {
+            cmd = { vim.fn.expand '~/.local/bin/dbt-language-server' },
+            filetypes = { 'sql' },
+            root_dir = lspconfig.util.root_pattern 'dbt_project.yml',
+            single_file_support = false,
+            settings = {},
+          },
+        }
+      end
+
+      lspconfig.dbt_ls.setup {
+        capabilities = capabilities,
       }
     end,
   },
