@@ -9,15 +9,17 @@ This is a **Kickstart.nvim-based** Neovim configuration tailored for data engine
 ## Architecture
 
 ```
-init.lua                    # Main config: options, keymaps, core plugins (~780 lines)
+init.lua                    # Core options, keymaps, autocommands
 lua/
-├── kickstart/plugins/      # Core plugin specs (lint, gitsigns, neo-tree, etc.)
+├── plugins/                # All plugin specs (lazy-loaded automatically)
+│   ├── core.lua            # Extracted core plugins (Telescope, LSP, Treesitter)
+│   ├── gitsigns.lua        # Git integration
+│   └── ...                 # Other modular plugins
 └── custom/
-    ├── plugins/            # User plugins (bigquery, copilot, dataform)
-    └── snippets/           # LuaSnip snippets (sqlx.lua for Dataform)
+    └── snippets/           # Custom LuaSnip snippets
 ```
 
-**Extension pattern**: Add new plugins to `lua/custom/plugins/` as separate files returning lazy.nvim specs. They're auto-imported via `{ import = 'custom.plugins' }`.
+**Extension pattern**: Add new plugins to `lua/plugins/` as separate files returning lazy.nvim specs. They're auto-imported via `{ import = 'plugins' }`.
 
 ## Key Tools & Setup
 
@@ -36,15 +38,6 @@ lua/
 - Markdown: `markdownlint`
 
 **Completion**: blink.cmp with LuaSnip
-
-## Custom BigQuery Plugin
-
-Located at `lua/custom/plugins/bigquery.lua`. Provides:
-- `:QueryCost` / `<leader>qe` - Dry-run to estimate query cost
-- `:CompileQuery` / `<leader>qc` - Compile Dataform query
-- `:BQRun` / `<leader>qq` - Execute query, show results in split
-
-Uses async `vim.fn.jobstart()` for non-blocking execution.
 
 ## Key Keymaps
 
