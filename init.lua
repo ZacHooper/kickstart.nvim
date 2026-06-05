@@ -88,7 +88,13 @@ vim.opt.rtp:prepend(lazypath)
 --  To check the current status of your plugins, run :Lazy
 -- Use `opts = {}` to force a plugin to be loaded.
 -- NOTE: Here is where you install your plugins.
-require('lazy').setup({ import = 'plugins' }, {
+require('lazy').setup({
+  { import = 'plugins.coding' },
+  { import = 'plugins.editor' },
+  { import = 'plugins.git' },
+  { import = 'plugins.tools' },
+  { import = 'plugins.ui' },
+}, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
