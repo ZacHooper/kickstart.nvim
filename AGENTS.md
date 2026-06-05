@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents (Hermes, Claude Code, Cursor, etc.) when working with code in this repository.
 
 ## Overview
 
@@ -8,21 +8,20 @@ This is a **Kickstart.nvim-based** Neovim configuration tailored for data engine
 
 ## Architecture
 
-```
+```text
 init.lua                    # Core options, keymaps, autocommands
 lua/
 ├── plugins/                # All plugin specs (lazy-loaded automatically)
-│   ├── lsp.lua             # Mason, LSP bindings, Fidget
-│   ├── conform.lua         # Auto-formatting
+│   ├── lsp.lua             # Mason, LSP bindings, ty, dbt-language-server
+│   ├── conform.lua         # Auto-formatting (ruff, sqlfluff, shfmt, etc)
 │   ├── blink.lua           # Autocompletion engine
 │   ├── telescope.lua       # Fuzzy finding
 │   ├── which-key.lua       # Keymap helper
 │   ├── treesitter.lua      # Syntax parsing
 │   ├── ui.lua              # Colorschemes, statusline
 │   ├── minuet.lua          # Minuet AI (Gemini Pro Ghost Text)
-│   ├── avante.lua          # Avante.nvim (AI Assistant)            # Extracted core plugins (Telescope, LSP, Treesitter)
-│   ├── gitsigns.lua        # Git integration
-│   └── ...                 # Other modular plugins
+│   ├── lint.lua            # Nvim-lint (sqlfluff, markdownlint, shellcheck)
+│   └── ...                 # Other modular plugins (gitsigns, neo-tree)
 └── custom/
     └── snippets/           # Custom LuaSnip snippets
 ```
