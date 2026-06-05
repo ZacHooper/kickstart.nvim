@@ -83,6 +83,7 @@ return {
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>l', group = '[L]anguage (Filetype)' },
       },
     },
   },
@@ -352,20 +353,26 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local lspconfig = require 'lspconfig'
+      local configs = require 'lspconfig.configs'
+
+      if not configs.ty then
+        configs.ty = {
+          default_config = {
+            cmd = { 'uv', 'run', 'ty', 'server' },
+            filetypes = { 'python' },
+            root_dir = lspconfig.util.root_pattern('pyproject.toml', '.git'),
+            single_file_support = true,
+          },
+        }
+      end
+
       local servers = {
         -- `:help lspconfig-all`
         -- sqlls removed - doesn't understand dbt/Jinja templating
-        basedpyright = {
-          filetypes = { 'python' },
-          settings = {
-            analysis = {
-              typeCheckingMode = 'standard',
-            },
-            python = {
-              pythonPath = '.venv/bin/python',
-            },
-          },
-        },
+        ty = {},
+        bashls = {},
+        taplo = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -389,11 +396,17 @@ return {
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
         'sqlfluff',
         'ruff',
-        'basedpyright',
         'markdownlint',
+        'jq',
+        'prettierd',
+        'prettier',
+        'bash-language-server',
+        'shellcheck',
+        'shfmt',
+        'taplo',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -469,21 +482,18 @@ return {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff' },
-        sql = { 'sql_formatter' },
+        sql = { 'sqlfluff' },
 
-        json = { 'jq' },
+        json = { 'jq', 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'markdownlint' },
-        html = { 'prettierd', 'prettier' },
-        yaml = { 'yaml-language-server' },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'prettierd', 'prettier', stop_after_first = true },
+        sh = { 'shfmt' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
-      formatters = {
-        sql_formatter = {
-          prepend_args = { '--language', 'bigquery', '--config', '{"keywordCase": "upper", "dataTypeCase": "upper", "tabWidth": 4}' },
-        },
-      },
+
     },
   },
 
@@ -495,6 +505,9 @@ return {
       { 'rafamadriz/friendly-snippets' },
     },
     opts = {
+      cmdline = {
+        enabled = false, -- Disables blink.cmp on the command line (fixes the :w error)
+      },
       keymap = {
         preset = 'default',
       },
@@ -502,8 +515,20 @@ return {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = 'mono',
       },
+      completion = { 
+        trigger = { prefetch_on_insert = false } -- Recommended for Minuet
+      },
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+        providers = {
+          minuet = {
+            name = 'minuet',
+            module = 'minuet.blink',
+            score_offset = 100,
+            async = true,
+            timeout_ms = 3000,
+          },
+        },
         per_filetype = {
           codecompanion = { 'codecompanion' },
         },
