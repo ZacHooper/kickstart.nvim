@@ -4,7 +4,7 @@ return {
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'diff', 'html' }, -- c, lua, vim, vimdoc, query, markdown, and markdown_inline are bundled with Neovim natively!
       auto_install = true,
       highlight = {
         enable = true,
