@@ -61,6 +61,13 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<C-d>', ':vsplit<CR>', { desc = 'Split screen vertically' })
 vim.keymap.set('n', '<C-S-d>', ':split<CR>', { desc = 'Split screen horizontally' })
 
+-- Quick Filetype setters for pasted snippets
+vim.keymap.set('n', '<leader>ls', '<cmd>set filetype=sql<CR>', { desc = 'Set [L]anguage to [S]QL' })
+vim.keymap.set('n', '<leader>lj', '<cmd>set filetype=json<CR>', { desc = 'Set [L]anguage to [J]SON' })
+vim.keymap.set('n', '<leader>lp', '<cmd>set filetype=python<CR>', { desc = 'Set [L]anguage to [P]ython' })
+vim.keymap.set('n', '<leader>lm', '<cmd>set filetype=markdown<CR>', { desc = 'Set [L]anguage to [M]arkdown' })
+
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 -- Highlight when yanking (copying) text. See `:help vim.highlight.on_yank()`
