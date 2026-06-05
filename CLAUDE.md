@@ -12,7 +12,13 @@ This is a **Kickstart.nvim-based** Neovim configuration tailored for data engine
 init.lua                    # Core options, keymaps, autocommands
 lua/
 ├── plugins/                # All plugin specs (lazy-loaded automatically)
-│   ├── core.lua            # Extracted core plugins
+│   ├── lsp.lua             # Mason, LSP bindings, Fidget
+│   ├── conform.lua         # Auto-formatting
+│   ├── blink.lua           # Autocompletion engine
+│   ├── telescope.lua       # Fuzzy finding
+│   ├── which-key.lua       # Keymap helper
+│   ├── treesitter.lua      # Syntax parsing
+│   ├── ui.lua              # Colorschemes, statusline
 │   ├── minuet.lua          # Minuet AI (Gemini Pro Ghost Text)
 │   ├── avante.lua          # Avante.nvim (AI Assistant)            # Extracted core plugins (Telescope, LSP, Treesitter)
 │   ├── gitsigns.lua        # Git integration
