@@ -9,10 +9,13 @@ This is a **Kickstart.nvim-based** Neovim configuration tailored for data engine
 ## Architecture
 
 ```text
-init.lua                    # Core options and autocommands
+init.lua                    # Entry point: global options and core module requires
 lua/
-├── core/
-│   └── keymaps.lua         # General keymaps (window splits, filetype setters)
+├── core/                   # Editor fundamentals
+│   ├── settings.lua        # vim.opt configurations
+│   ├── keymaps.lua         # General keymaps (window splits, filetype setters)
+│   ├── autocommands.lua    # Editor-level autocmds (highlight on yank, colorscheme)
+│   └── lazy.lua            # lazy.nvim bootstrap and plugin import setup
 ├── plugins/                # Plugins are grouped by domain (lazy-loaded recursively)
 │   ├── coding/             # blink.cmp, minuet-ai, autopairs
 │   ├── editor/             # telescope, treesitter, which-key

@@ -17,8 +17,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Split screen with cmd-d
-vim.keymap.set('n', '<C-d>', ':vsplit<CR>', { desc = 'Split screen vertically' })
-vim.keymap.set('n', '<C-S-d>', ':split<CR>', { desc = 'Split screen horizontally' })
+vim.keymap.set('n', '<C-d>', ':vnew<CR>', { desc = 'Split screen vertically' })
+vim.keymap.set('n', '<C-S-d>', ':new<CR>', { desc = 'Split screen horizontally' })
 
 -- Quick Filetype setters for pasted snippets
 vim.keymap.set('n', '<leader>ls', '<cmd>set filetype=sql<CR>', { desc = 'Set [L]anguage to [S]QL' })
