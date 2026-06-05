@@ -4,35 +4,40 @@ A modular, highly customized [Kickstart.nvim](https://github.com/nvim-lua/kickst
 
 ## 🚀 Key Features
 
-* **AI Ghost Text:** BYOK (Bring Your Own Key) Copilot-style completion via [`minuet-ai.nvim`](https://github.com/milanglacier/minuet-ai.nvim) powered by Google's Gemini 2.5 Pro.
+* **AI Ghost Text:** BYOK (Bring Your Own Key) Copilot-style completion via [`minuet-ai.nvim`](https://github.com/milanglacier/minuet-ai.nvim) powered by Google's Gemini 3.1 Pro.
 * **Data Engineering Focus:**
   * **Python:** Uses Astral's [`ty`](https://github.com/astral-sh/ty) for blazing-fast LSP type-checking and `ruff` for formatting.
   * **SQL / dbt:** Configured with `sqlfluff` for native linting/formatting (picks up `.sqlfluff` rules automatically) and a custom `dbt-language-server`.
   * **Shell / Configs:** Native support for `.sh`, `.env`, and `.toml` using `bash-language-server`, `shellcheck`, `shfmt`, and `taplo`.
-* **Ultra-Fast Autocomplete:** Powered by `blink.cmp` (no command-line lag).
-* **Lean & Modular:** No monolithic config. Every plugin lives in its own dedicated file.
+* **Domain-Driven Architecture:** Plugins are strictly organized by their purpose (UI, Tools, Coding, Editor, Git) for easy debugging and modularity.
 
-## 📂 Architecture
+## 📂 Architecture & Plugins
 
-```text
-~/.config/nvim/
-├── init.lua                 # Core options, baseline keymaps, and autocommands
-├── AGENTS.md                # System prompt guidelines for AI agents
-├── lua/
-│   ├── plugins/             # 🔌 Plugin Specifications (lazy.nvim)
-│   │   ├── blink.lua        # Autocompletion engine
-│   │   ├── conform.lua      # Formatting on save
-│   │   ├── lint.lua         # Async linting
-│   │   ├── lsp.lua          # Mason, Language Servers
-│   │   ├── minuet.lua       # Gemini AI completion
-│   │   ├── telescope.lua    # Fuzzy finding
-│   │   ├── treesitter.lua   # Syntax highlighting
-│   │   ├── ui.lua           # Colorschemes, status line
-│   │   ├── which-key.lua    # Keymap helper
-│   │   └── ...
-│   └── custom/
-│       └── snippets/        # LuaSnip custom snippets
-```
+The `lua/plugins/` directory is recursively loaded by `lazy.nvim`. It is split into 5 core domains:
+
+### 1. `coding/` (Code writing & AI)
+* `completion.lua` (`blink.cmp`): Lightning-fast, non-blocking autocomplete engine.
+* `ai.lua` (`minuet-ai.nvim`): BYOK Gemini 3.1 Pro ghost-text inline suggestions.
+* `autopairs.lua` (`nvim-autopairs`): Automatically closes brackets and quotes as you type.
+
+### 2. `tools/` (Smarts, LSPs & External binaries)
+* `lsp.lua` (`mason` & `lspconfig`): Smart language features (Go-to-definition, hover docs) and binary package management (ty, dbt-ls).
+* `formatting.lua` (`conform.nvim`): Auto-formats code on save (sqlfluff, ruff, shfmt).
+* `linting.lua` (`nvim-lint`): Asynchronous background linting for catching bugs (shellcheck, markdownlint).
+* `markdown_preview.lua`: Live browser rendering of Markdown files.
+
+### 3. `editor/` (Navigation & Search)
+* `search.lua` (`telescope.nvim`): Fuzzy finding for files, grep search, and LSP symbols.
+* `syntax.lua` (`nvim-treesitter`): Advanced AST-based syntax highlighting and code parsing.
+* `keymaps.lua` (`which-key.nvim`): Popup helper for discovering available keymaps.
+
+### 4. `ui/` (Aesthetics & Interface)
+* `core.lua` (`mini.nvim`, themes): Statusline, text-objects, and Ayu/Rose-pine colorschemes.
+* `explorer.lua` (`neo-tree.nvim`): Sidebar file tree explorer.
+* `indent.lua` (`indent-blankline`): Dotted vertical lines to show indentation depth.
+
+### 5. `git/` (Source Control)
+* `signs.lua` (`gitsigns.nvim`): Inline Git blame and gutter diff indicators.
 
 ## ⌨️ Custom Workflows
 
